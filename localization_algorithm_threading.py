@@ -1,6 +1,7 @@
 import numpy as np
 from scipy import optimize
 import sys, collections, time
+from math import sin, cos, radians, sqrt , pi, atan
 from scipy.optimize import lsq_linear, root, minimize
 
 def lsq_method(distances_to_anchors, anchor_positions):
@@ -43,5 +44,9 @@ def costfun_method(distances_to_anchors, anchor_positions):
 
     newton_z = newton(function, derivative, 80, 0.01)
     new_tag_pos = np.concatenate((np.delete(np.array(tag_pos), 2), [newton_z] + anc_z_ls_mean))
-    return np.around(new_tag_pos, 4)
+
+    central_point = [anchor_positions[2:0]/2, anchor_positions[2:1]/2, 1]
+    angle = atan((central_point[0] - new_tag_pos[0])/(central_point[1] - new_tag_pos[1]))
+
+    return np.around(new_tag_pos, 4), angle
          
